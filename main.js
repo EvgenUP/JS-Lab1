@@ -1,93 +1,93 @@
-function triangle(value1, type1, value2, type2) {
-  // Перевірка введених даних
-  if (isNaN(value1) || isNaN(value2) || value1 <= 0 || value2 <= 0) {
-    return "Некоректні значення. Будь ласка, введіть числа більше 0.";
-  }
+function triangle(val1, type1, val2, type2) {
+    // Перевірка на правильність типів
+    const validTypes = ["leg", "hypotenuse", "angle", "adjacent angle", "opposite angle"];
+    if (!validTypes.includes(type1) || !validTypes.includes(type2)) {
+        console.log("Please read the instructions and try again.");
+        return "failed";
+    }
 
-  // Перевірка типів
-  const validTypes = ["leg", "hypotenuse", "opposite", "adjacent"];
-  if (!validTypes.includes(type1.toLowerCase()) || !validTypes.includes(type2.toLowerCase())) {
-    return "Некоректні типи. Дозволені типи: leg, hypotenuse, opposite, adjacent.";
-  }
+    // Перевірка на некоректність уведених значень
+    if (val1 <= 0 || val2 <= 0) {
+        console.log("The values must be positive.");
+        return "failed";
+    }
 
-  // Визначення катетів, гіпотенузи та кутів
-  let a, b, c, alpha, beta;
-  switch (type1.toLowerCase()) {
-    case "leg":
-      if (type2 === "hypotenuse") {
-        a = value1;
-        c = value2;
-        if (a > c) {
-          return "Катет не може бути більшим за гіпотенузу.";
-        }
+    // Обчислення результатів
+    let c, a, b, alpha, beta;
+    if (type1 === "leg" && type2 === "hypotenuse") {
+        a = val1;
+        c = val2;
         b = Math.sqrt(c * c - a * a);
-        alpha = Math.asin(a / c) * 180 / Math.PI;
+        alpha = Math.asin(a / c) * (180 / Math.PI);
         beta = 90 - alpha;
-      } else if (type2 === "opposite") {
-        a = value1;
-        b = value2;
-        c = Math.sqrt(a * a + b * b);
-        alpha = Math.asin(b / c) * 180 / Math.PI;
-        beta = 90 - alpha;
-      } else if (type2 === "adjacent") {
-        a = value1;
-        b = Math.sqrt(value2 * value2 + a * a);
-        c = value2;
-        alpha = Math.atan2(b, a) * 180 / Math.PI;
-        beta = 90 - alpha;
-      }
-      break;
-    case "hypotenuse":
-      if (type2 === "leg") {
-        c = value1;
-        a = value2;
-        if (a > c) {
-          return "Катет не може бути більшим за гіпотенузу.";
-        }
+    } else if (type1 === "hypotenuse" && type2 === "leg") {
+        c = val1;
+        a = val2;
         b = Math.sqrt(c * c - a * a);
-        alpha = Math.asin(a / c) * 180 / Math.PI;
+        alpha = Math.asin(a / c) * (180 / Math.PI);
         beta = 90 - alpha;
-      } else if (type2 === "opposite") {
-        c = value1;
-        b = value2;
-        a = Math.sqrt(c * c - b * b);
-        alpha = Math.asin(b / c) * 180 / Math.PI;
-        beta = 90 - alpha;
-      } else if (type2 === "adjacent") {
-        c = value1;
-        a = value2;
-        if (a > c) {
-          return "Катет не може бути більшим за гіпотенузу.";
+    } else if ((type1 === "leg" && type2 === "angle") || (type1 === "angle" && type2 === "leg")) {
+        if (type1 === "angle") {
+            alpha = val1;
+            a = val2;
+        } else {
+            alpha = val2;
+            a = val1;
         }
+        if (alpha <= 0 || alpha >= 90) {
+            console.log("The angle must be between 0 and 90 degrees.");
+            return "failed";
+        }
+        beta = 90 - alpha;
+        c = a / Math.sin(alpha * (Math.PI / 180));
         b = Math.sqrt(c * c - a * a);
-        alpha = Math.atan2(b, a) * 180 / Math.PI;
+    } else if ((type1 === "leg" && type2 === "adjacent angle") || (type1 === "adjacent angle" && type2 === "leg")) {
+        if (type1 === "adjacent angle") {
+            alpha = val1;
+            a = val2;
+        } else {
+            alpha = val2;
+            a = val1;
+        }
+        if (alpha <= 0 || alpha >= 90) {
+            console.log("The angle must be between 0 and 90 degrees.");
+            return "failed";
+        }
         beta = 90 - alpha;
-      }
-      break;
-    case "opposite":
-      if (type2 === "leg") {
-        b = value1;
-        a = value2;
-        c = Math.sqrt(a * a + b * b);
-        alpha = Math.asin(b / c) * 180 / Math.PI;
+        c = a / Math.tan(alpha * (Math.PI / 180));
+        b = Math.sqrt(c * c - a * a);
+    } else if ((type1 === "leg" && type2 === "opposite angle") || (type1 === "opposite angle" && type2 === "leg")) {
+        if (type1 === "opposite angle") {
+            alpha = val1;
+            a = val2;
+        } else {
+            alpha = val2;
+            a = val1;
+        }
+        if (alpha <= 0 || alpha >= 90) {
+            console.log("The angle must be between 0 and 90 degrees.");
+            return "failed";
+        }
         beta = 90 - alpha;
-      } else if (type2 === "hypotenuse") {
-        b = value1;
-        c = value2;
-        a = Math.sqrt(c * c - b * b);
-        alpha = Math.asin(b / c) * 180 / Math.PI;
-        beta = 90 - alpha;
-      } else if (type2 === "adjacent") {
-        b = value1;
-        a = Math.tan(Math.PI / 2 - type2Value) * b;
-        c = Math.sqrt(a * a + b * b);
-        alpha = Math.asin
+        c = a / Math.sin(beta * (Math.PI / 180));
+        b = Math.sqrt(c * c - a * a);
+    } else {
+        console.log("Please read the instructions and try again.");
+        return "failed";
+    }
 
+    // Перевірка на некоректність уведених значень
+    if (b <= 0 || a >= c) {
+        console.log("Invalid input values.");
+        return "failed";
+    }
+    console.log(`a = ${a.toFixed(2)}\nb = ${b.toFixed(2)}\nc = ${c.toFixed(2)}\nalpha = ${alpha.toFixed(2)}°\nbeta = ${beta.toFixed(2)}°`);
+    return "success";
+}
 
 console.log("Це програма для для розв'язання прямокутних трикутників ")
 console.log("Щоб використовувати її достатньо викликати функцію triangle() та вказати їй")
 console.log("значення першого параметру, тип параметру, значення другого параметру, тип параметру")
 console.log("допустимими типами параметрів є leg, hypotenuse, adjacent angle, opposite angle, angle, типи мають вказуватися у лапках")
-
 
 
